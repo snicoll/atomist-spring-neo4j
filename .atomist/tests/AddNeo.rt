@@ -17,7 +17,7 @@ then
   countFilesInDirectory "src/main/java/user/domain" = 2
 
 
-
+/*
   scenario AddNeo should not work on an empty project
 
   given
@@ -26,4 +26,5 @@ then
     AddNeo
 
   then
-    NoChange
+    NotApplicable
+*/

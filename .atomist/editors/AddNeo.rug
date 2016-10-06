@@ -1,0 +1,61 @@
+
+
+@tag "java"
+@tag "spring"
+@tag "spring-boot"
+@tag "neo"
+@description "Add Neo support to a Spring Boot project"
+editor AddNeo
+
+# Only run if the project is ready
+precondition IsSpringBoot
+precondition IsMaven
+
+CopyAndMoveJavaFiles
+
+with pom do
+  addOrReplaceDependency "org.springframework.boot" "spring-boot-starter-data-neo4j"
+
+
+
+editor CopyAndMoveJavaFiles
+
+# Package the source content is in
+let source_package_path = "src/main/java/org/neo4j/example"
+
+let domain_source_package = { source_package_path + "/person" }
+
+with spring.bootProject project begin
+  do copyEditorBackingFileOrFail { source_package_path + "/GraphConfiguration.java" }
+  do copyEditorBackingFilesPreservingPath domain_source_package
+  do renamePackage "org.neo4j.example.person" { project.applicationClassPackage() + ".domain" }
+  do renamePackage "org.neo4j.example" { project.applicationClassPackage() }
+end
+
+
+
+editor AddProperties
+
+with properties when path = "src/main/resources/application.properties" begin
+  do eval { print(properties) }
+  do setProperty "spring.data.neo4j.uri" "http://neo4j:password@localhost:7474"
+end
+
+
+editor AddDocumentation
+
+with project begin
+
+  do copyEditorBackingFileOrFail "graph-view.jpg" "graph-view.jpg"
+  #with file when path = "README.md" do
+
+end
+
+
+
+# Returns true if the 'with' clause matches anything. In this case it matches the project.
+predicate IsSpringBoot
+with spring.bootProject
+
+predicate IsMaven
+with pom

@@ -16,6 +16,8 @@ then
   fileContains expected_graph_config "neo4j" and
   noFileContains "org.neo4j.example" and
   directoryExists "src/main/java/org/neo4j/example" = false and
+  directoryExists "src/main/java/org" = false and
+  directoryExists "src/main/java/user/domain" and
   countFilesInDirectory "src/main/java/user/domain" = 2
 
 

@@ -1,5 +1,4 @@
 
-
 @tag "java"
 @tag "spring"
 @tag "spring-boot"
@@ -15,22 +14,6 @@ CopyAndMoveJavaFiles
 
 with pom do
   addOrReplaceDependency "org.springframework.boot" "spring-boot-starter-data-neo4j"
-
-
-
-editor CopyAndMoveJavaFiles
-
-# Package the source content is in
-let source_package_path = "src/main/java/org/neo4j/example"
-
-let domain_source_package = { source_package_path + "/person" }
-
-with spring.bootProject project begin
-  do copyEditorBackingFileOrFail { source_package_path + "/GraphConfiguration.java" }
-  do copyEditorBackingFilesPreservingPath domain_source_package
-  do renamePackage "org.neo4j.example.person" { project.applicationClassPackage() + ".domain" }
-  do renamePackage "org.neo4j.example" { project.applicationClassPackage() }
-end
 
 
 

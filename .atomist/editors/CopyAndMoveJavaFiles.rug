@@ -1,0 +1,14 @@
+
+editor CopyAndMoveJavaFiles
+
+# Package the source content is in
+let source_package_path = "src/main/java/org/neo4j/example"
+
+let domain_source_package_path = { source_package_path + "/person" }
+
+with spring.bootProject project begin
+  do copyEditorBackingFileOrFail { source_package_path + "/GraphConfiguration.java" }
+  do copyEditorBackingFilesPreservingPath domain_source_package_path
+  do renamePackage "org.neo4j.example.person" { project.applicationClassPackage() + ".domain" }
+  do renamePackage "org.neo4j.example" { project.applicationClassPackage() }
+end

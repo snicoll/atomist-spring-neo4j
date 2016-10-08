@@ -1,5 +1,5 @@
 
-scenario AddNewJavaSourceInCorrectPackage should add Java sources
+scenario AddJavaSrcFiles should add Java sources
 
 let expected_graph_config = "src/main/java/user/GraphConfiguration.java"
 
@@ -7,7 +7,7 @@ given
   files under ".atomist/tests/targets/simple"
 
 when
-  CopyAndMoveSrcJavaFiles
+  AddJavaSrcFiles
 
 then
   #dumpAll and

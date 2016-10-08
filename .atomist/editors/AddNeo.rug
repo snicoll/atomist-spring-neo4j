@@ -10,15 +10,14 @@ editor AddNeo
 precondition IsSpringBoot
 precondition IsMaven
 
-CopyAndMoveSrcJavaFiles
+AddJavaSrcFiles
+AddProperties
+AddDocumentation
 AddIntegrationTestFiles
 
-with pom
-  do addOrReplaceDependency "org.springframework.boot" "spring-boot-starter-data-neo4j"
 
-
-
-editor CopyAndMoveSrcJavaFiles
+# -------------------------------------------------------------------------
+editor AddJavaSrcFiles
 
 # Package the source content is in
 let source_package_path = "src/main/java/org/neo4j/example"
@@ -32,20 +31,24 @@ with spring.bootProject project begin
   do renamePackage "org.neo4j.example" { project.applicationClassPackage() }
 end
 
-with pom begin
-  do addOrReplaceProperty "neo4j.ogm.version" "2.0.5"
-  do addOrReplaceDependencyVersion "org.neo4j" "neo4j-ogm-bolt-driver" "${neo4j.ogm.version}"
-  do addOrReplaceDependencyVersion "org.neo4j" "neo4j-ogm-embedded-driver" "${neo4j.ogm.version}"
-end
+with pom
+  do addOrReplaceDependency "org.springframework.boot" "spring-boot-starter-data-neo4j"
 
 
-
+# -------------------------------------------------------------------------
 editor AddIntegrationTestFiles
 
 with spring.bootProject project begin
   do copyEditorBackingFileOrFail "src/test/resources/ogm.properties"
   do copyEditorBackingFileOrFail "src/test/java/org/neo4j/example/PersonTests.java"
+  do renamePackage "org.neo4j.example.person" { project.applicationClassPackage() + ".domain" }
   do renamePackage "org.neo4j.example" { project.applicationClassPackage() }
+end
+
+with pom begin
+  do addOrReplaceProperty "neo4j.ogm.version" "2.0.5"
+  do addOrReplaceDependencyOfVersion "org.neo4j" "neo4j-ogm-bolt-driver" "${neo4j.ogm.version}"
+  do addOrReplaceDependencyOfVersion "org.neo4j" "neo4j-ogm-embedded-driver" "${neo4j.ogm.version}"
 end
 
 
@@ -66,7 +69,7 @@ with project begin
 end
 
 
-
+# -------------------------------------------------------------------------
 # Returns true if the 'with' clause matches anything. In this case it matches the project.
 predicate IsSpringBoot
 with spring.bootProject

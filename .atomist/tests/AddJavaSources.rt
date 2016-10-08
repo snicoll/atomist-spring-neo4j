@@ -7,10 +7,10 @@ given
   files under ".atomist/tests/targets/simple"
 
 when
-  CopyAndMoveJavaFiles
+  CopyAndMoveSrcJavaFiles
 
 then
-dumpAll and
+  #dumpAll and
   fileExists expected_graph_config and
   fileContains expected_graph_config "neo4j" and
   countFilesInDirectory "src/main/java/user/domain" = 2

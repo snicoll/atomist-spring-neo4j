@@ -10,11 +10,43 @@ editor AddNeo
 precondition IsSpringBoot
 precondition IsMaven
 
-CopyAndMoveJavaFiles
+CopyAndMoveSrcJavaFiles
+AddIntegrationTestFiles
 
-with pom do
-  addOrReplaceDependency "org.springframework.boot" "spring-boot-starter-data-neo4j"
+with pom
+  do addOrReplaceDependency "org.springframework.boot" "spring-boot-starter-data-neo4j"
 
+
+
+editor CopyAndMoveSrcJavaFiles
+
+# Package the source content is in
+let source_package_path = "src/main/java/org/neo4j/example"
+
+let domain_source_package_path = { source_package_path + "/person" }
+
+with spring.bootProject project begin
+  do copyEditorBackingFileOrFail { source_package_path + "/GraphConfiguration.java" }
+  do copyEditorBackingFilesPreservingPath domain_source_package_path
+  do renamePackage "org.neo4j.example.person" { project.applicationClassPackage() + ".domain" }
+  do renamePackage "org.neo4j.example" { project.applicationClassPackage() }
+end
+
+with pom begin
+  do addOrReplaceProperty "neo4j.ogm.version" "2.0.5"
+  do addOrReplaceDependencyVersion "org.neo4j" "neo4j-ogm-bolt-driver" "${neo4j.ogm.version}"
+  do addOrReplaceDependencyVersion "org.neo4j" "neo4j-ogm-embedded-driver" "${neo4j.ogm.version}"
+end
+
+
+
+editor AddIntegrationTestFiles
+
+with spring.bootProject project begin
+  do copyEditorBackingFileOrFail "src/test/resources/ogm.properties"
+  do copyEditorBackingFileOrFail "src/test/java/org/neo4j/example/PersonTests.java"
+  do renamePackage "org.neo4j.example" { project.applicationClassPackage() }
+end
 
 
 editor AddProperties
@@ -28,7 +60,6 @@ end
 editor AddDocumentation
 
 with project begin
-
   do copyEditorBackingFileOrFail "graph-view.jpg" "graph-view.jpg"
   #with file when path = "README.md" do
 

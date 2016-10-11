@@ -46,9 +46,8 @@ with spring.bootProject project begin
 end
 
 with pom begin
-  do addOrReplaceProperty "neo4j.ogm.version" "2.0.5"
-  do addOrReplaceDependencyOfVersion "org.neo4j" "neo4j-ogm-bolt-driver" "${neo4j.ogm.version}"
-  do addOrReplaceDependencyOfVersion "org.neo4j" "neo4j-ogm-embedded-driver" "${neo4j.ogm.version}"
+  do addOrReplaceDependencyOfVersion "org.neo4j" "neo4j-ogm-bolt-driver" "${neo4j-ogm.version}"
+  do addOrReplaceDependencyOfVersion "org.neo4j" "neo4j-ogm-embedded-driver" "${neo4j-ogm.version}"
 end
 
 
